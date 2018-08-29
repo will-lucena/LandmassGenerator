@@ -6,7 +6,8 @@ public class MapGenerator : MonoBehaviour
     public enum DrawMode
     {
         Noise,
-        Color
+        Color,
+        Mesh
     }
 
     public DrawMode drawMode;
@@ -20,6 +21,7 @@ public class MapGenerator : MonoBehaviour
     public int seed;
     public int treeRate;
     public Vector2 offset;
+    public float meshHeightModfifier;
 
     public bool autoUpdate;
     public TerrainType[] regions;
@@ -59,13 +61,18 @@ public class MapGenerator : MonoBehaviour
 		}
 
         MapDisplay display = FindObjectOfType<MapDisplay>();
-        if (drawMode.Equals(DrawMode.Noise))
+
+        switch (drawMode)
         {
-            display.drawTexture(TextureGenerator.textureFromHeightMap(noiseMap));
-        }
-        else if (drawMode.Equals(DrawMode.Color))
-        {
-            display.drawTexture(TextureGenerator.textureFromColorMap(colorMap, mapWidth, mapHeight));
+            case DrawMode.Noise:
+                display.drawTexture(TextureGenerator.textureFromHeightMap(noiseMap));
+                break;
+            case DrawMode.Color:
+                display.drawTexture(TextureGenerator.textureFromColorMap(colorMap, mapWidth, mapHeight));
+                break;
+            case DrawMode.Mesh:
+                display.drawMesh(MeshGenerator.generateTerrainMesh(noiseMap, meshHeightModfifier), TextureGenerator.textureFromColorMap(colorMap, mapWidth, mapHeight));
+                break;
         }
     }
 

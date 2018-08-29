@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class TextureGenerator
 {
@@ -19,14 +17,14 @@ public static class TextureGenerator
         int width = heightMap.GetLength(0);
         int height = heightMap.GetLength(1);
 
-        Color[] colourMap = new Color[width * height];
-        for (int y = 0; y < height; y++)
+        Color[] colorMap = new Color[width * height];
+        for (int i = 0; i < height; i++)
         {
-            for (int x = 0; x < width; x++)
+            for (int j = 0; j < width; j++)
             {
-                colourMap[y * width + x] = Color.Lerp(Color.black, Color.white, heightMap[x, y]);
+                colorMap[i * width + j] = Color.Lerp(Color.black, Color.white, heightMap[j, i]);
             }
         }
-        return textureFromColorMap(colourMap, width, height);
+        return textureFromColorMap(colorMap, width, height);
     }
 }

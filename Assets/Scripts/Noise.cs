@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public static class Noise
 {
@@ -27,19 +26,19 @@ public static class Noise
         float halfWidth = mapWidth / 2;
         float halfHeight = mapHeight / 2;
 
-        for (int y = 0; y < mapHeight; y++)
+        for (int i = 0; i < mapHeight; i++)
         {
-            for (int x = 0; x < mapWidth; x++)
+            for (int j = 0; j < mapWidth; j++)
             {
 
                 float amplitude = 1;
                 float frequency = 1;
                 float noiseHeight = 0;
 
-                for (int i = 0; i < octaves; i++)
+                for (int k = 0; k < octaves; k++)
                 {
-                    float sampleX = (x - halfWidth) / scale * frequency + octavesOffsets[i].x;
-                    float sampleY = (y - halfHeight) / scale * frequency + octavesOffsets[i].y;
+                    float sampleX = (j - halfWidth) / scale * frequency + octavesOffsets[k].x;
+                    float sampleY = (i - halfHeight) / scale * frequency + octavesOffsets[k].y;
 
                     float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 -1;
                     noiseHeight += perlinValue * amplitude;
@@ -55,7 +54,7 @@ public static class Noise
                 {
                     minNoiseHeight = noiseHeight;
                 }
-                noiseMap[x, y] = noiseHeight;
+                noiseMap[j, i] = noiseHeight;
             }
         }
 
