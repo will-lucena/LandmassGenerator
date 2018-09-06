@@ -48,12 +48,12 @@ public class MapGenerator : MonoBehaviour
                     {
                         if (yn > 0 && yn < mapHeight && xn > 0 && xn < mapWidth)
                         {
-                            double e = noiseMap[yn, xn];
+                            double e = noiseMap[xn, yn];
                             if (e > max) { max = e; }
                         }
                     }
                 }
-                if (noiseMap[y, x] == max && noiseMap[y, x] > regions[0].height)
+                if (noiseMap[x, y] == max && noiseMap[x, y] > regions[0].height)
                 {
                     colorMap[y * mapWidth + x] = regions[regions.Length-1].color;
                 }
