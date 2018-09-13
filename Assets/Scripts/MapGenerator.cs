@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -19,7 +20,10 @@ public class MapGenerator : MonoBehaviour
     public float persistance;
     public float lacunarity;
     public int seed;
+    public bool treePlacement;
     public int treeRate;
+    public GameObject treePrefab;
+    public Transform target;
     public Vector2 offset;
     public float meshHeightModfifier;
 
@@ -40,23 +44,6 @@ public class MapGenerator : MonoBehaviour
 						break;
 					}
 				}
-                double max = 0;
-                // there are more efficient algorithms than this
-                for (int yn = y - treeRate; yn <= y + treeRate; yn++)
-                {
-                    for (int xn = x - treeRate; xn <= x + treeRate; xn++)
-                    {
-                        if (yn > 0 && yn < mapHeight && xn > 0 && xn < mapWidth)
-                        {
-                            double e = noiseMap[xn, yn];
-                            if (e > max) { max = e; }
-                        }
-                    }
-                }
-                if (noiseMap[x, y] == max && noiseMap[x, y] > regions[0].height)
-                {
-                    colorMap[y * mapWidth + x] = regions[regions.Length-1].color;
-                }
             }
 		}
 
@@ -73,6 +60,32 @@ public class MapGenerator : MonoBehaviour
             case DrawMode.Mesh:
                 display.drawMesh(MeshGenerator.generateTerrainMesh(noiseMap, meshHeightModfifier), TextureGenerator.textureFromColorMap(colorMap, mapWidth, mapHeight));
                 break;
+        }
+
+        if (treePlacement)
+        {
+            placeTrees(TreeMap.findTrees(noiseMap, treeRate, regions[1].height));
+        }
+    }
+    
+    public void placeTrees(List<Vector3> trees)
+    {
+        foreach (Vector3 position in trees)
+        {
+            Vector3 positionCorrection = new Vector3(position.x - mapWidth/2, position.y, position.z - mapHeight/2);
+            GameObject go = Instantiate(treePrefab, positionCorrection, Quaternion.identity, target);
+            MeshCollider meshCollider = go.GetComponent<MeshCollider>();
+
+            Vector3 origin = new Vector3(go.transform.position.x, go.transform.position.y + meshCollider.bounds.max.y, go.transform.position.z);
+
+            RaycastHit hit;
+
+            if (Physics.Raycast(origin, go.transform.TransformDirection(Vector3.down), out hit))
+            {
+                Debug.Log(hit.normal);
+            }
+            go.transform.rotation = new Quaternion(hit.normal.x, hit.normal.y, hit.normal.z, Quaternion.identity.w);
+            go.transform.position = new Vector3(go.transform.position.x, go.transform.position.y + meshCollider.bounds.max.y/2, go.transform.position.z);
         }
     }
 

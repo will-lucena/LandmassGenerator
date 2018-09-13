@@ -65,8 +65,6 @@ public static class Noise
                 noiseMap[j, i] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseMap[j, i]);
             }
         }
-
         return noiseMap;
     }
-
 }
